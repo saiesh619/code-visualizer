@@ -1,6 +1,3 @@
-Here’s a short, **professional** `README.md` for your project:
-
----
 
 # CodeVisualizer
 
@@ -79,10 +76,3 @@ npm run build
 
 ---
 
-## 📜 License
-
-MIT License.
-
----
-
-Would you also like a **badges section** (npm, vite, typescript) at the top to make it even cooler? (yes/no) 🚀
