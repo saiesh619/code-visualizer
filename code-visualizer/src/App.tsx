@@ -1,35 +1,75 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import MonacoEditor from "./components/MonacoEditor";
+import LLVMTab from "./components/LLVMTab";
+import CFGTab from "./components/CFGTab";
+import ASTTab from "./components/ASTTab";
+import DryRunnerTab from "./components/DryRunnerTab";
+import OutputTab from "./components/OutputTab"; // Make sure this exists
+
+const rightTabs = ["LLVM", "CFG", "AST", "DryRunner"];
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [activeTab, setActiveTab] = useState("LLVM");
+  const [codeOutput, setCodeOutput] = useState("");
+  const [llvmIR, setLLVMIR] = useState("LLVM IR content here");
+
+  const renderTab = () => {
+    switch (activeTab) {
+      case "LLVM":
+        return <LLVMTab llvmIR={llvmIR} />;
+      case "CFG":
+        return <CFGTab />;
+      case "AST":
+        return <ASTTab />;
+      case "DryRunner":
+        return <DryRunnerTab />;
+      default:
+        return null;
+    }
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div style={{ display: "flex", width: "100%", height: "100vh", margin: 0, padding: 0 }}>
+      {/* Left: Editor */}
+      <div style={{ flex: 1, borderRight: "1px solid #444" }}>
+        <MonacoEditor setOutput={setCodeOutput} />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+
+      {/* Right Panel */}
+      <div style={{ flex: 1.2, display: "flex", flexDirection: "column" }}>
+        {/* Top: Output */}
+        <div style={{ height: "40%", borderBottom: "1px solid #444", overflow: "auto" }}>
+          <OutputTab output={codeOutput} />
+        </div>
+
+        {/* Bottom: Tab view */}
+        <div style={{ flex: 1, overflow: "auto", backgroundColor: "#0f111a" }}>
+        <div style={{ height: "60%", display: "flex", flexDirection: "column" }}>
+          <div style={{ display: "flex", backgroundColor: "#333" }}>
+            {rightTabs.map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                style={{
+                  padding: "10px 15px",
+                  backgroundColor: activeTab === tab ? "#444" : "#222",
+                  color: "#fff",
+                  border: "none",
+                  cursor: "pointer",
+                }}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+          
+
+          <div style={{ flex: 1, overflow: "auto" }}>{renderTab()}</div>
+          </div>
+        </div>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </div>
+  );
 }
 
-export default App
+export default App;
